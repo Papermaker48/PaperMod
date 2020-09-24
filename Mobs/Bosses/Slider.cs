@@ -19,7 +19,7 @@ namespace PaperMod.Mobs.Bosses
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Temple Slider");
-            Main.npcFrameCount[npc.type] = 5;
+            Main.npcFrameCount[npc.type] = 4;
         }
 
         public override void SetDefaults()
@@ -39,6 +39,7 @@ namespace PaperMod.Mobs.Bosses
             npc.boss = true;
         }
 
+
         public override void OnHitPlayer(Player target, int damage, bool crit)
         {
             Main.PlaySound(SoundID.NPCDeath43);
@@ -49,14 +50,22 @@ namespace PaperMod.Mobs.Bosses
         {
             npc.TargetClosest(true);
 
-            //move cooldown
-            npc.ai[0]++;
+            float lifeQuotient = (float)npc.lifeMax / (float)npc.life;
+
+            //move cooldown, lowers as boss loses life
+            npc.ai[0] += lifeQuotient;
 
             //tile impact cooldown
-            npc.ai[1]++;
+            //npc.ai[1]++;
+
+            //trigger phase 2 at 50% life
+            if (lifeQuotient >= 1.5f)
+            {
+                npc.ai[2] = 1;
+            }
 
             //attempt to ram player on cooldown
-            if (npc.HasValidTarget && npc.ai[0] == 120)
+            if (npc.HasValidTarget && npc.ai[0] >= 120)
             {
                 //move faster farther away
                 float dist = Vector2.Distance(npc.Center, Main.player[npc.target].Center) * 0.02f;
@@ -72,18 +81,22 @@ namespace PaperMod.Mobs.Bosses
                 if (angle.X > 0 && angle.Y > -0.75 && angle.Y < 0.75)
                 {
                     npc.velocity = right * dist;
+                    Main.PlaySound(SoundID.DD2_MonkStaffGroundMiss);
                 }
                 else if (angle.X < 0 && angle.Y > -0.75 && angle.Y < 0.75)
                 {
                     npc.velocity = left * dist;
+                    Main.PlaySound(SoundID.DD2_MonkStaffGroundMiss);
                 }
                 else if (angle.Y < 0 && angle.X > -0.75 && angle.X < 0.75)
                 {
                     npc.velocity = up * dist;
+                    Main.PlaySound(SoundID.DD2_MonkStaffGroundMiss);
                 }
                 else if (angle.Y > 0 && angle.X > -0.75 && angle.X < 0.75)
                 {
                     npc.velocity = down * dist;
+                    Main.PlaySound(SoundID.DD2_MonkStaffGroundMiss);
                 }
 
                 //phase through barriers when attempting to move after ramming into them
@@ -92,14 +105,14 @@ namespace PaperMod.Mobs.Bosses
                 //reset cooldown after move
                 npc.ai[0] = 0;
             }
-            else if (npc.ai[0] > 40)
+            else if (npc.ai[0] > 40 * lifeQuotient)
             {
                 npc.velocity.X *= 0.9f;
                 npc.velocity.Y *= 0.9f;
             }
 
             //stop phasing after 15 ticks
-            if (npc.ai[0] == 15)
+            if (npc.ai[0] >= 15 * lifeQuotient)
             {
                 npc.noTileCollide = false;
             }
@@ -108,12 +121,10 @@ namespace PaperMod.Mobs.Bosses
             if (npc.collideX && npc.velocity.X != 0)
             {
                 Main.PlaySound(SoundID.Item70);
-                npc.ai[1] = 0;
             }
             if (npc.collideY && npc.velocity.Y != 0)
             {
                 Main.PlaySound(SoundID.Item70);
-                npc.ai[1] = 0;
             }
 
 
@@ -131,11 +142,38 @@ namespace PaperMod.Mobs.Bosses
                 }*/
 
 
-
-
-
-
         }
+
+
+        public override void FindFrame(int frameHeight)
+        {
+            if (npc.ai[2] == 1)
+            {
+                npc.frameCounter++;
+                if (npc.frameCounter < 15)
+                {
+                    npc.frame.Y = 1 * frameHeight;
+                }
+                else if (npc.frameCounter < 30)
+                {
+                    npc.frame.Y = 2 * frameHeight;
+                }
+                else if (npc.frameCounter < 45)
+                {
+                    npc.frame.Y = 3 * frameHeight;
+                }
+                else if (npc.frameCounter < 60)
+                {
+                    npc.frame.Y = 2 * frameHeight;
+                }
+                else
+                {
+                    npc.frameCounter = 0;
+                }
+            }
+        }
+
+
 
     }
 }
