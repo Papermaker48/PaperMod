@@ -1,0 +1,3 @@
+displayName = Auranyces
+author = Papermaker
+version = 0.1
