@@ -43,7 +43,6 @@ namespace PaperMod.Mobs.Bosses
         public override void OnHitPlayer(Player target, int damage, bool crit)
         {
             Main.PlaySound(SoundID.NPCDeath43);
-
         }
 
         public override void AI()
@@ -64,6 +63,17 @@ namespace PaperMod.Mobs.Bosses
                 npc.ai[2] = 1;
             }
 
+            //scale impact damage with speed
+            if (npc.ai[2] == 0)
+            {
+                npc.damage = (int)npc.velocity.Length() * 12;
+            }
+            else
+            {
+                npc.damage = (int)npc.velocity.Length() * 10;
+            }
+            Main.NewText(npc.damage);
+        
             //attempt to ram player on cooldown
             if (npc.HasValidTarget && npc.ai[0] >= 120)
             {
@@ -80,23 +90,23 @@ namespace PaperMod.Mobs.Bosses
                 //choose direction to move
                 if (angle.X > 0 && angle.Y > -0.75 && angle.Y < 0.75)
                 {
-                    npc.velocity = right * dist;
-                    Main.PlaySound(SoundID.DD2_MonkStaffGroundMiss);
+                    npc.velocity = right * dist * (npc.ai[2] + 0.5f);
+                    Main.PlaySound(SoundID.Item100);
                 }
                 else if (angle.X < 0 && angle.Y > -0.75 && angle.Y < 0.75)
                 {
-                    npc.velocity = left * dist;
-                    Main.PlaySound(SoundID.DD2_MonkStaffGroundMiss);
+                    npc.velocity = left * dist * (npc.ai[2] + 0.5f);
+                    Main.PlaySound(SoundID.Item100);
                 }
                 else if (angle.Y < 0 && angle.X > -0.75 && angle.X < 0.75)
                 {
                     npc.velocity = up * dist;
-                    Main.PlaySound(SoundID.DD2_MonkStaffGroundMiss);
+                    Main.PlaySound(SoundID.Item100);
                 }
                 else if (angle.Y > 0 && angle.X > -0.75 && angle.X < 0.75)
                 {
                     npc.velocity = down * dist;
-                    Main.PlaySound(SoundID.DD2_MonkStaffGroundMiss);
+                    Main.PlaySound(SoundID.Item100);
                 }
 
                 //phase through barriers when attempting to move after ramming into them
