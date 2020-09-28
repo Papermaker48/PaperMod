@@ -43,6 +43,10 @@ namespace PaperMod.Mobs.Bosses
         public override void OnHitPlayer(Player target, int damage, bool crit)
         {
             Main.PlaySound(SoundID.NPCDeath43);
+
+            //stop moving when hitting player
+            float lifeQuotient = (float)npc.lifeMax / (float)npc.life;
+            npc.ai[0] = 40 * lifeQuotient;
         }
 
         public override void AI()
@@ -72,7 +76,7 @@ namespace PaperMod.Mobs.Bosses
             {
                 npc.damage = (int)npc.velocity.Length() * 10;
             }
-            Main.NewText(npc.damage);
+            //Main.NewText(npc.damage);
         
             //attempt to ram player on cooldown
             if (npc.HasValidTarget && npc.ai[0] >= 120)
@@ -90,12 +94,12 @@ namespace PaperMod.Mobs.Bosses
                 //choose direction to move
                 if (angle.X > 0 && angle.Y > -0.75 && angle.Y < 0.75)
                 {
-                    npc.velocity = right * dist * (npc.ai[2] + 0.5f);
+                    npc.velocity = right * dist;
                     Main.PlaySound(SoundID.Item100);
                 }
                 else if (angle.X < 0 && angle.Y > -0.75 && angle.Y < 0.75)
                 {
-                    npc.velocity = left * dist * (npc.ai[2] + 0.5f);
+                    npc.velocity = left * dist;
                     Main.PlaySound(SoundID.Item100);
                 }
                 else if (angle.Y < 0 && angle.X > -0.75 && angle.X < 0.75)
@@ -128,13 +132,54 @@ namespace PaperMod.Mobs.Bosses
             }
 
             //impact effects
+            Dust dust;
             if (npc.collideX && npc.velocity.X != 0)
             {
                 Main.PlaySound(SoundID.Item70);
+                //left or right?
+                if (npc.oldVelocity.X < 0)
+                {
+                    //purple sparkles
+                    for (int i = 0; i < 10; i++)
+                    {
+                        dust = Main.dust[Terraria.Dust.NewDust(npc.position, 10, npc.height, 143, 1.5f, Main.rand.Next(-1,1), 0, default, 2f)];
+                        dust = Main.dust[Terraria.Dust.NewDust(npc.position, 10, npc.height, 27, -2f, 0f, 0, new Color(255, 255, 255), 2.5f)];
+                    }
+                }
+                else if (npc.oldVelocity.X > 0)
+                {
+                    //purple sparkles
+                    for (int i = 0; i < 10; i++)
+                    {
+                        dust = Main.dust[Terraria.Dust.NewDust(new Vector2(npc.position.X + 88, npc.position.Y), 10, npc.height, 143, -1.5f, Main.rand.Next(-1,1), 0, default, 2f)];
+                        dust = Main.dust[Terraria.Dust.NewDust(new Vector2(npc.position.X + 88, npc.position.Y), 10, npc.height, 27, 2f, 0f, 0, new Color(255, 255, 255), 2.5f)];
+                    }
+                }
             }
             if (npc.collideY && npc.velocity.Y != 0)
             {
                 Main.PlaySound(SoundID.Item70);
+                //as above,
+                if (npc.oldVelocity.Y < 0)
+                {
+                    //purple sparkles
+                    for (int i = 0; i < 10; i++)
+                    {
+                        dust = Main.dust[Terraria.Dust.NewDust(npc.position, npc.width, 10, 143, Main.rand.Next(-1,1), 1.5f, 0, default, 2f)];
+                        dust = Main.dust[Terraria.Dust.NewDust(npc.position, npc.width, 10, 27, 0f, -2f, 0, default, 2.5f)];
+                    }
+                }
+                //so below
+                else if (npc.oldVelocity.Y > 0)
+                {
+                    //purple sparkles
+                    for (int i = 0; i < 10; i++)
+                    {
+                        dust = Main.dust[Terraria.Dust.NewDust(new Vector2(npc.position.X, npc.position.Y + 88), npc.width, 10, 143, Main.rand.Next(-1,1), -1.5f, 0, default, 2f)];
+                        dust = Main.dust[Terraria.Dust.NewDust(new Vector2(npc.position.X, npc.position.Y + 88), npc.width, 10, 27, 0f, 2f, 0, default, 2.5f)];
+                    }
+                }
+
             }
 
 

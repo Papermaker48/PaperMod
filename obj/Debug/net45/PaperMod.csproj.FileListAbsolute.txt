@@ -1,4 +1,3 @@
-C:\Users\Papermaker\Documents\My Games\Terraria\ModLoader\Mod Sources\PaperMod\obj\Debug\net45\PaperMod.csprojResolveAssemblyReference.cache
 C:\Users\Papermaker\Documents\My Games\Terraria\ModLoader\Mod Sources\PaperMod\obj\Debug\net45\PaperMod.csproj.CoreCompileInputs.cache
 C:\Users\Papermaker\Documents\My Games\Terraria\ModLoader\Mod Sources\PaperMod\obj\Debug\net45\PaperMod.AssemblyInfo.cs
 C:\Users\Papermaker\Documents\My Games\Terraria\ModLoader\Mod Sources\PaperMod\bin\Debug\net45\PaperMod.dll
@@ -29,3 +28,5 @@ C:\Users\Papermaker\Documents\My Games\Terraria\ModLoader\Mod Sources\PaperMod\b
 C:\Users\Papermaker\Documents\My Games\Terraria\ModLoader\Mod Sources\PaperMod\obj\Debug\net45\PaperMod.csproj.CopyComplete
 C:\Users\Papermaker\Documents\My Games\Terraria\ModLoader\Mod Sources\PaperMod\obj\Debug\net45\PaperMod.dll
 C:\Users\Papermaker\Documents\My Games\Terraria\ModLoader\Mod Sources\PaperMod\obj\Debug\net45\PaperMod.pdb
+C:\Users\Papermaker\Documents\My Games\Terraria\ModLoader\Mod Sources\PaperMod\obj\Debug\net45\PaperMod.csprojAssemblyReference.cache
+C:\Users\Papermaker\Documents\My Games\Terraria\ModLoader\Mod Sources\PaperMod\obj\Debug\net45\PaperMod.AssemblyInfoInputs.cache
