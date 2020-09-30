@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Text;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -51,19 +52,48 @@ namespace PaperMod.Mobs.Bosses
 
         public override void AI()
         {
+            Main.NewText(npc.ai[2]);
+
             npc.TargetClosest(true);
 
-            float lifeQuotient = (float)npc.lifeMax / (float)npc.life;
+            //begin waking up if aggroed
+            bool awake = false;
+            bool phase2 = false;
+            if (npc.HasValidTarget)
+            {
+                if (awake != true)
+                {
+                    npc.ai[2] = 2;
+                }
+                else
+                {
+                    if (phase2 = false)
+                    {
+                        npc.ai[2] = 0;
+                    }
+
+                }
+            }
+
+            //wake up
+            if (npc.ai[2] == 2)
+            {
+                npc.ai[3]++;
+                if (npc.ai[3] > 60)
+                {
+                    awake = true;
+                }
+                Main.NewText(npc.ai[3]);
+            }
 
             //move cooldown, lowers as boss loses life
+            float lifeQuotient = (float)npc.lifeMax / (float)npc.life;
             npc.ai[0] += lifeQuotient;
 
-            //tile impact cooldown
-            //npc.ai[1]++;
-
             //trigger phase 2 at 50% life
-            if (lifeQuotient >= 1.5f)
+            if (lifeQuotient > 1.5f)
             {
+                phase2 = true;
                 npc.ai[2] = 1;
             }
 
@@ -202,30 +232,32 @@ namespace PaperMod.Mobs.Bosses
 
         public override void FindFrame(int frameHeight)
         {
-            if (npc.ai[2] == 1)
+            if (npc.ai[2] == 2)
             {
                 npc.frameCounter++;
-                if (npc.frameCounter < 15)
+                if (npc.frameCounter < 20)
                 {
                     npc.frame.Y = 1 * frameHeight;
                 }
-                else if (npc.frameCounter < 30)
+                else if (npc.frameCounter < 40)
                 {
                     npc.frame.Y = 2 * frameHeight;
-                }
-                else if (npc.frameCounter < 45)
-                {
-                    npc.frame.Y = 3 * frameHeight;
                 }
                 else if (npc.frameCounter < 60)
                 {
-                    npc.frame.Y = 2 * frameHeight;
+                    npc.frame.Y = 3 * frameHeight;
                 }
                 else
                 {
                     npc.frameCounter = 0;
                 }
             }
+            else
+            {
+                npc.frame.Y = 0 * frameHeight;
+            }
+
+
         }
 
 
