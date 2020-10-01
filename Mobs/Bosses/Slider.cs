@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing.Text;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -27,7 +28,7 @@ namespace PaperMod.Mobs.Bosses
         {
             npc.aiStyle = -1;
             npc.lifeMax = 4000;
-            npc.damage = 34;
+            npc.damage = 0;
             npc.defense = 15;
             npc.knockBackResist = 0f;
             npc.width = 98;
@@ -56,34 +57,15 @@ namespace PaperMod.Mobs.Bosses
 
             npc.TargetClosest(true);
 
-            //begin waking up if aggroed
-            bool awake = false;
-            bool phase2 = false;
-            if (npc.HasValidTarget)
+            //begin waking up when spawned
+            if (npc.ai[2] == 0)
             {
-                if (awake != true)
+                npc.ai[0]++;
+                if (npc.ai[0] >= 75)
                 {
-                    npc.ai[2] = 2;
+                    npc.ai[2] = 1;
+                    npc.ai[0] = 0;
                 }
-                else
-                {
-                    if (phase2 = false)
-                    {
-                        npc.ai[2] = 0;
-                    }
-
-                }
-            }
-
-            //wake up
-            if (npc.ai[2] == 2)
-            {
-                npc.ai[3]++;
-                if (npc.ai[3] > 60)
-                {
-                    awake = true;
-                }
-                Main.NewText(npc.ai[3]);
             }
 
             //move cooldown, lowers as boss loses life
@@ -93,23 +75,22 @@ namespace PaperMod.Mobs.Bosses
             //trigger phase 2 at 50% life
             if (lifeQuotient > 1.5f)
             {
-                phase2 = true;
-                npc.ai[2] = 1;
+                npc.ai[2] = 2;
             }
 
-            //scale impact damage with speed
-            if (npc.ai[2] == 0)
+            //scale impact damage with speed, nerf in phase 2 due to higher speeds
+            if (npc.ai[2] == 1)
             {
                 npc.damage = (int)npc.velocity.Length() * 12;
             }
-            else
+            else if (npc.ai[2] == 2)
             {
                 npc.damage = (int)npc.velocity.Length() * 10;
             }
             //Main.NewText(npc.damage);
         
             //attempt to ram player on cooldown
-            if (npc.HasValidTarget && npc.ai[0] >= 120)
+            if (npc.HasValidTarget && npc.ai[2] > 0 && npc.ai[0] >= 120)
             {
                 //move faster farther away
                 float dist = Vector2.Distance(npc.Center, Main.player[npc.target].Center) * 0.02f;
@@ -209,22 +190,8 @@ namespace PaperMod.Mobs.Bosses
                         dust = Main.dust[Terraria.Dust.NewDust(new Vector2(npc.position.X, npc.position.Y + 88), npc.width, 10, 27, 0f, 2f, 0, default, 2.5f)];
                     }
                 }
-
             }
 
-
-
-                /*int posX = (int)(npc.position.X / 16f);
-                int posY = (int)(npc.position.Y / 16f);
-                for (int x = posX; x < 7; x++)
-                {
-                    for (int y = posY; y < 7; y++)
-                    {
-
-                        WorldGen.KillTile(x, y, false, false, true);
-
-                    }
-                }*/
 
 
         }
@@ -232,18 +199,18 @@ namespace PaperMod.Mobs.Bosses
 
         public override void FindFrame(int frameHeight)
         {
-            if (npc.ai[2] == 2)
+            if (npc.ai[2] == 0)
             {
                 npc.frameCounter++;
-                if (npc.frameCounter < 20)
+                if (npc.frameCounter < 25)
                 {
                     npc.frame.Y = 1 * frameHeight;
                 }
-                else if (npc.frameCounter < 40)
+                else if (npc.frameCounter < 50)
                 {
                     npc.frame.Y = 2 * frameHeight;
                 }
-                else if (npc.frameCounter < 60)
+                else if (npc.frameCounter < 75)
                 {
                     npc.frame.Y = 3 * frameHeight;
                 }
@@ -256,7 +223,6 @@ namespace PaperMod.Mobs.Bosses
             {
                 npc.frame.Y = 0 * frameHeight;
             }
-
 
         }
 
