@@ -53,9 +53,10 @@ namespace PaperMod.Mobs.Bosses
 
         public override void AI()
         {
-            Main.NewText(npc.ai[2]);
-
             npc.TargetClosest(true);
+
+            bool spinning = false;
+            Dust dust;
 
             //begin waking up when spawned
             if (npc.ai[2] == 0)
@@ -70,10 +71,13 @@ namespace PaperMod.Mobs.Bosses
 
             //move cooldown, lowers as boss loses life
             float lifeQuotient = (float)npc.lifeMax / (float)npc.life;
-            npc.ai[0] += lifeQuotient;
+            if (npc.ai[2] == 1 || npc.ai[2] == 2)
+            {
+                npc.ai[0] += lifeQuotient;
+            }
 
             //trigger phase 2 at 50% life
-            if (lifeQuotient > 1.5f)
+            if (lifeQuotient > 1.5f && spinning == false)
             {
                 npc.ai[2] = 2;
             }
@@ -90,7 +94,7 @@ namespace PaperMod.Mobs.Bosses
             //Main.NewText(npc.damage);
         
             //attempt to ram player on cooldown
-            if (npc.HasValidTarget && npc.ai[2] > 0 && npc.ai[0] >= 120)
+            if (npc.HasValidTarget && spinning == false && (npc.ai[2] == 1 || npc.ai[2] == 2) && npc.ai[0] >= 120)
             {
                 //move faster farther away
                 float dist = Vector2.Distance(npc.Center, Main.player[npc.target].Center) * 0.02f;
@@ -130,11 +134,41 @@ namespace PaperMod.Mobs.Bosses
                 //reset cooldown after move
                 npc.ai[0] = 0;
             }
-            else if (npc.ai[0] > 40 * lifeQuotient)
+            else if (npc.ai[2] == 1 || npc.ai[2] == 2)
             {
-                npc.velocity.X *= 0.9f;
-                npc.velocity.Y *= 0.9f;
+                if (npc.ai[0] > 40 * lifeQuotient)
+                {
+                    npc.velocity.X *= 0.9f;
+                    npc.velocity.Y *= 0.9f;
+                }
             }
+
+            //trigger spin attack in phase 2
+            if (npc.ai[2] == 2)
+            {
+                npc.ai[3] += Main.rand.Next(1, 3);
+                if (npc.ai[3] > 300)
+                {
+                    npc.ai[3] = 0;
+                    spinning = true;
+                    npc.velocity = npc.DirectionTo(Main.player[npc.target].Center) * 5;
+                    npc.ai[2] = 3;
+                }
+            }
+
+            //spin attack
+            if (npc.ai[2] == 3)
+            {
+                npc.rotation++;
+                dust = Main.dust[Terraria.Dust.NewDust(npc.position, 10, npc.height, 27, -2f, 0f, 0, new Color(255, 255, 255), 2.5f)];
+                /*if (npc.collideX || npc.collideY)
+                {
+                    npc.ai[2] = 2;
+                    npc.rotation = 0;
+                    spinning = false;
+                }*/
+            }
+            Main.NewText(npc.ai[2]);
 
             //stop phasing after 15 ticks
             if (npc.ai[0] >= 15 * lifeQuotient)
@@ -143,7 +177,6 @@ namespace PaperMod.Mobs.Bosses
             }
 
             //impact effects
-            Dust dust;
             if (npc.collideX && npc.velocity.X != 0)
             {
                 Main.PlaySound(SoundID.Item70);
