@@ -40,6 +40,7 @@ namespace PaperMod.Necro.Minions
             projectile.penetrate = -1;
         }
 
+
         public override void Kill(int timeLeft)
         {
             if (PaperPlayer.necroMinions > 0)

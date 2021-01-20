@@ -24,7 +24,7 @@ namespace PaperMod.Necro.Scythes
 			item.height = 54;
 			item.useTime = 35;
 			item.useAnimation = 35;
-			item.useStyle = 1;
+			item.useStyle = ItemUseStyleID.SwingThrow;
 			item.knockBack = 3f;
 			item.value = 27000;
 			item.rare = ItemRarityID.Blue;
@@ -57,7 +57,7 @@ namespace PaperMod.Necro.Scythes
                     item.useTime = 35;
                     item.useAnimation = 35;
                     item.UseSound = (SoundID.Item1);
-                    item.useStyle = 1;
+                    item.useStyle = ItemUseStyleID.SwingThrow;
                     item.shoot = mod.ProjectileType("ScytheDiscordThrown");
                 }
                 else
@@ -66,7 +66,7 @@ namespace PaperMod.Necro.Scythes
                     item.useTime = 5;
                     item.useAnimation = 5;
                     item.UseSound = (null);
-                    item.useStyle = 5;
+                    item.useStyle = ItemUseStyleID.HoldingOut;
                     item.shoot = ProjectileID.None;
                 }
             }
@@ -76,7 +76,7 @@ namespace PaperMod.Necro.Scythes
                 item.useTime = 35;
                 item.useAnimation = 35;
                 item.UseSound = (SoundID.Item71);
-                item.useStyle = 5;
+                item.useStyle = ItemUseStyleID.HoldingOut;
                 item.shoot = mod.ProjectileType("ScytheDiscordSlash");
             }
             return true;

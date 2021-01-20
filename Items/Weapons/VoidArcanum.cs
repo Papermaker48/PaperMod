@@ -28,7 +28,7 @@ namespace PaperMod.Items.Weapons
             item.height = 54;
             item.useTime = 35;
             item.useAnimation = 35;
-            item.useStyle = 5;
+            item.useStyle = ItemUseStyleID.HoldingOut;
             item.knockBack = 3f;
             item.value = 27000;
             item.rare = ItemRarityID.Blue;

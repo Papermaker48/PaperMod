@@ -32,7 +32,7 @@ namespace PaperMod.Necro.Minions
                 //item.height = 10;
                 item.useTime = 24;
                 item.useAnimation = 24;
-                item.useStyle = 1;
+                item.useStyle = ItemUseStyleID.SwingThrow;
                 item.value = 1;
                 item.rare = ItemRarityID.Orange;
                 item.UseSound = SoundID.Item44;

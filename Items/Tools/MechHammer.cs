@@ -28,7 +28,7 @@ namespace PaperMod.Items.Tools
             //item.width = 10;
             //item.height = 10;
             item.damage = 6;
-            item.useStyle = 1;
+            item.useStyle = ItemUseStyleID.SwingThrow;
             item.useTime = 16;
             item.useAnimation = 16;
             item.knockBack = 5;
